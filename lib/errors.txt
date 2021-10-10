@@ -1,0 +1,69 @@
+
+lib/second_call-stack.ts:54:13 - error TS2322: Type 'import("/home/gherlein/src/secondCall/node_modules/@aws-cdk/core/lib/duration").Duration' is not assignable to type 'import("/home/gherlein/src/secondCall/node_modules/@aws-cdk/aws-events/node_modules/@aws-cdk/core/lib/duration").Duration'.
+  Types have separate declarations of a private property 'amount'.
+
+54             timeout: core_1.Duration.seconds(60)
+               ~~~~~~~
+
+  node_modules/@aws-cdk/aws-lambda/lib/function.d.ts:71:14
+    71     readonly timeout?: Duration;
+                    ~~~~~~~
+    The expected type comes from property 'timeout' which is declared here on type 'FunctionProps'
+
+lib/second_call-stack.ts:78:13 - error TS2322: Type 'import("/home/gherlein/src/secondCall/node_modules/@aws-cdk/core/lib/duration").Duration' is not assignable to type 'import("/home/gherlein/src/secondCall/node_modules/@aws-cdk/aws-events/node_modules/@aws-cdk/core/lib/duration").Duration'.
+
+78             timeout: core_1.Duration.seconds(60)
+               ~~~~~~~
+
+  node_modules/@aws-cdk/aws-lambda/lib/function.d.ts:71:14
+    71     readonly timeout?: Duration;
+                    ~~~~~~~
+    The expected type comes from property 'timeout' which is declared here on type 'FunctionProps'
+
+src/firstCall.ts:5:25 - error TS7006: Parameter 'event' implicitly has an 'any' type.
+
+5 exports.handler = async(event, context, callback) => {
+                          ~~~~~
+
+src/firstCall.ts:5:32 - error TS7006: Parameter 'context' implicitly has an 'any' type.
+
+5 exports.handler = async(event, context, callback) => {
+                                 ~~~~~~~
+
+src/firstCall.ts:5:41 - error TS7006: Parameter 'callback' implicitly has an 'any' type.
+
+5 exports.handler = async(event, context, callback) => {
+                                          ~~~~~~~~
+
+src/firstCall.ts:7:9 - error TS7034: Variable 'actions' implicitly has type 'any[]' in some locations where its type cannot be determined.
+
+7     let actions;
+          ~~~~~~~
+
+src/firstCall.ts:12:29 - error TS2554: Expected 2 arguments, but got 1.
+
+12             actions = await newCall(event);
+                               ~~~~~~~~~~~~~~
+
+  src/firstCall.ts:44:31
+    44 async function newCall(event, details) {
+                                     ~~~~~~~
+    An argument for 'details' was not provided.
+
+src/firstCall.ts:37:20 - error TS7005: Variable 'actions' implicitly has an 'any[]' type.
+
+37         "Actions": actions
+                      ~~~~~~~
+
+src/firstCall.ts:44:24 - error TS7006: Parameter 'event' implicitly has an 'any' type.
+
+44 async function newCall(event, details) {
+                          ~~~~~
+
+src/firstCall.ts:44:31 - error TS7006: Parameter 'details' implicitly has an 'any' type.
+
+44 async function newCall(event, details) {
+                                 ~~~~~~~
+
+
+Found 10 errors.

@@ -1,8 +1,18 @@
-*.js
-!jest.config.js
-*.d.ts
+*~
 node_modules
+package-lock.json
+yarn.lock
+cdk-outputs.json
+
+# compiled js in lib
+lib/*.js
+
+# compiled js in bin
+bin
 
 # CDK asset staging directory
 .cdk.staging
 cdk.out
+
+.DS_Store
+out/

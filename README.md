@@ -1,14 +1,6 @@
-# Welcome to your CDK TypeScript project!
+# Second Call
 
-This is a blank project for TypeScript development with CDK.
+This is just my [firstCall](https://github.com/gherlein/firstCall) application ported over
+to typescript in the CDK instead of javascript.
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
-
-## Useful commands
-
- * `npm run build`   compile typescript to js
- * `npm run watch`   watch for changes and compile
- * `npm run test`    perform the jest unit tests
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
+NOTE: only the CDK part is ported. The application (src/firstCall.js) is still vanilla js.
