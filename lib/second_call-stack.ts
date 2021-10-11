@@ -52,12 +52,13 @@ export class SecondCallStack extends cdk.Stack {
             statements: [
                 new iam.PolicyStatement({
                     effect: iam.Effect.ALLOW,
-                    actions: ["polly:StartSpeechSynthesisTask","polly:ListSpeechSynthesisTasks","polly:GetSpeechSynthesisTask"],
-                    resources: ["*"],
+                   //actions: ["polly:StartSpeechSynthesisTask","polly:ListSpeechSynthesisTasks","polly:GetSpeechSynthesisTask"],
+                   actions: ["polly:SynthesizeSpeech"],
+                   resources: ["*"],
                 }),
                 new iam.PolicyStatement({
                     effect: iam.Effect.ALLOW,
-                    actions: ["s3:PutObject"],
+                    actions: ["s3:PutObject","s3:ListObject"],
                     resources: [`${wavFiles.bucketArn}/*`],
                 }),/*
                 new iam.PolicyStatement({

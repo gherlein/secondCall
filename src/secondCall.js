@@ -55,26 +55,7 @@ exports.handler = async(event, context, callback) => {
     callback(null, response);
 }
 
-// You can setup a S3 expiration rule to expire all of these temporary objects that we create during the process.
-// For debugging purposes I do not delete the temporary objects for now.
 const announcementsKeyPrefix = "announcements/";
-// This gives the caller five seconds to provide a Lex directive or response. We intend on handling recording until
-// silence detection, which can make this response period more flexible
-const messageMaximumLengthInSeconds = 5;
-// For the example, I'm using a single S3 bucket, you can certainly break apart different buckets for different use
-// cases.
-//const s3AnnounceBucketName = process.env.STORAGE_VISUALVOICEMAIL167E06E1_BUCKETNAME;
-// This is the name of my Lex bot. You can use any Lex bot you configure in the portal, in any region that makes sense
-// for your app.
-const lexBotName = 'VoicemailRetrievalBot';
-const lexBotAlias = 'PROD';
-// This is the Lex input type for telephone calls.
-const lexInputContentType = 'audio/lpcm; sample-rate=8000; sample-size-bits=16; channel-count=1; is-big-endian=false';
-// To provide a level of flexibility, I'm actually just taking SSML responses from Lex and reencoding with Polly.
-// You could also choose to take PCM responses and render them back directly. It really is up to you. I have examples
-// in other parts of the solve about constructing wave files for playback (indeed, the code is also available in this function).
-const lexOutputContentType = 'text/plain; charset=utf-8';
-
 
 // New call, synthesis of a dynamic welcome speech using Polly.
 async function newCall(event) {
@@ -85,22 +66,18 @@ async function newCall(event) {
     await synthesizeWelcomeSpeech(wavFileBucket, s3EntranceKeyName);
     console.log("calling playAudioAction");
     playAudioAction.Parameters.AudioSource.Key = s3EntranceKeyName;
-    return [playAudioAction,hangupAction];
-//    rv = await playResponseAndRecordForLex(event, s3EntranceKeyName, rv);
+    return [playAudioAction];
     return rv;
 };
 
-/*
-async function newCall(event, details) {
-    playAudioAction.Parameters.AudioSource.Key = "hello-goodbye.wav";
-    return [playAudioAction,hangupAction];
-}
-*/
 
 // Helper methods to synthesize speech using Polly
 async function synthesizeWelcomeSpeech(s3Bucket, s3Key) {
-
-    let audioBuffer = await synthesizeSpeechInternal("<speak>Welcome to <emphasis>secondCall.</emphasis><break /></speak>", 'ssml', 'Joanna', 'en-US');
+    d = new Date();
+    h = d.getHours();
+    m = d.getMinutes();
+    console.log(h.toString() +m.toString());
+    let audioBuffer = await synthesizeSpeechInternal("<speak>Welcome to <emphasis>secondCall.</emphasis><break/>The time is" +h.toString() +m.toString() +"U C T<break/>.  <emphasis>Goodbye</emphasis></speak>", 'ssml', 'Joanna', 'en-US');
     return audioBuffer ? addWaveHeaderAndUploadToS3(audioBuffer, s3Bucket, s3Key) : null;    
 };
 
