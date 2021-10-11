@@ -36,7 +36,14 @@ to solve was the IAM permissions parts.  The docs are not clear on how exactly t
 }
 ```
 
-The snip of code that does this is:
+I was very much thrown off by the Polly docs on ["Setting Up the IAM Policy for Asynchronous Synthesis"](https://docs.aws.amazon.com/polly/latest/dg/asynchronous-iam.html).  Those are NOT the actions for API calls.
+You need 
+
+```
+Action": "polly:SynthesizeSpeech"
+```
+
+Alas, now I know.  The snip of code that does this is:
 
 ```typescript
 const smaLambdaRole = new iam.Role(this, 'smaLambdaRole', {
