@@ -1,5 +1,7 @@
 {
   "SecondCallStack": {
-    "inboundPhoneNumber": "+12246005366"
+    "secondCallLambdaARN": "arn:aws:lambda:us-west-2:497939524935:function:SecondCallStack-secondCallFDDB60DD-y4WVvweto5BY",
+    "inboundPhoneNumber": "+16186362100",
+    "secondCallLambdaLog": "/aws/lambda/SecondCallStack-secondCallFDDB60DD-y4WVvweto5BY"
   }
 }

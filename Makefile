@@ -1,6 +1,6 @@
 STACKNAME := SecondCallStack
-LAMBDALOG := $(shell jq .SecondCallStack.SecondCallLambdaLog cdk-outputs.json)
-LAMBDAARN := $(shell jq .SecondCallStack.SecondCallLambdaARN cdk-outputs.json)
+LAMBDALOG := $(shell jq .SecondCallStack.secondCallLambdaLog cdk-outputs.json)
+LAMBDAARN := $(shell jq .SecondCallStack.secondCallLambdaARN cdk-outputs.json)
 
 IN_EVENT  := ./test/in.json
 OUT_JSON  := ./out/out.json
@@ -15,6 +15,9 @@ deploy:
 
 
 logs:
+	aws logs tail $(LAMBDALOG) --follow --format short 
+
+logs-info:
 	aws logs tail $(LAMBDALOG) --follow --format short --filter-pattern INFO
 
 clean:

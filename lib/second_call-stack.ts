@@ -5,11 +5,13 @@ import s3deploy = require('@aws-cdk/aws-s3-deployment')
 import iam = require('@aws-cdk/aws-iam')
 import lambda = require('@aws-cdk/aws-lambda');
 import custom = require('@aws-cdk/custom-resources')
-//import core_1 = require("@aws-cdk/core");
+import sqs = require('@aws-cdk/aws-sqs');
 
 export class SecondCallStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
+
+        const deadLetterQueue = new sqs.Queue(this, 'deadLetterQueue');
 
         // create a bucket for the recorded wave files and set the right policies
         const wavFiles = new s3.Bucket(this, 'wavFiles', {
@@ -37,10 +39,38 @@ export class SecondCallStack extends cdk.Stack {
             destinationBucket: wavFiles,
             contentType: 'audio/wav'
         });
+
         const smaLambdaRole = new iam.Role(this, 'smaLambdaRole', {
             assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
         });
         smaLambdaRole.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole"));
+        
+        const pollyRole = new iam.Role(this, 'pollyRole', {
+            assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+        }); 
+        const pollyPolicyDoc = new iam.PolicyDocument({
+            statements: [
+                new iam.PolicyStatement({
+                    effect: iam.Effect.ALLOW,
+                    actions: ["polly:StartSpeechSynthesisTask","polly:ListSpeechSynthesisTasks","polly:GetSpeechSynthesisTask"],
+                    resources: ["*"],
+                }),
+                new iam.PolicyStatement({
+                    effect: iam.Effect.ALLOW,
+                    actions: ["s3:PutObject"],
+                    resources: [`${wavFiles.bucketArn}/*`],
+                }),/*
+                new iam.PolicyStatement({
+                    effect: iam.Effect.ALLOW,
+                    actions: ["sns:Publish"],
+                    resources: ["*"],
+                }),*/
+            ],
+        });
+        const pollyPollicy = new iam.Policy(this, 'pollyPollicy', {
+            document: pollyPolicyDoc
+          });
+        smaLambdaRole.attachInlinePolicy(pollyPollicy);
 
         // create the lambda function that does the call
         const secondCall = new lambda.Function(this, 'secondCall', {
@@ -94,7 +124,8 @@ export class SecondCallStack extends cdk.Stack {
         });
         const inboundPhoneNumber = inboundSMA.getAttString('phoneNumber');
         new cdk.CfnOutput(this, 'inboundPhoneNumber', { value: inboundPhoneNumber });
-
+        new cdk.CfnOutput(this, 'secondCallLambdaLog', { value: secondCall.logGroup.logGroupName });
+        new cdk.CfnOutput(this, 'secondCallLambdaARN', { value: secondCall.functionArn });
     }
 }
 exports.SecondCallStack = SecondCallStack;
