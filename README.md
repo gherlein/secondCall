@@ -36,8 +36,19 @@ to solve was the IAM permissions parts.  The docs are not clear on how exactly t
 }
 ```
 
-I was very much thrown off by the Polly docs on ["Setting Up the IAM Policy for Asynchronous Synthesis"](https://docs.aws.amazon.com/polly/latest/dg/asynchronous-iam.html).  Those are NOT the actions for API calls.
-You need 
+I was very much thrown off by the Polly docs on ["Setting Up the IAM Policy for Asynchronous Synthesis"](https://docs.aws.amazon.com/polly/latest/dg/asynchronous-iam.html).  Also, the 
+[example](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/polly-examples.html) of how to call the API is confusing:
+
+```javascript
+const run = async () => {
+ try {
+ const data = await polly.send(
+ new StartSpeechSynthesisTaskCommand(s3Params));
+     }
+};
+```
+
+That example is using identity, which realistically means using Cognito.  But if you want to do role-based IAM, it turns out it's a tad different.  And the actual IAM policy is much different. You need: 
 
 ```
 Action": "polly:SynthesizeSpeech"
