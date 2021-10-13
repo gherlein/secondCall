@@ -91,6 +91,32 @@ const smaLambdaRole = new iam.Role(this, 'smaLambdaRole', {
         smaLambdaRole.attachInlinePolicy(pollyPollicy);
 ```
 
+This generates a policy like this (actual ARN obscurred):
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": "polly:SynthesizeSpeech",
+            "Resource": "*",
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "s3:PutObject",
+                "s3:ListObject"
+            ],
+            "Resource": "arn:aws:s3:::secondcallstack-wavfiles-hash-obscurred/*",
+            "Effect": "Allow"
+        }
+    ]
+}
+```
+
+That policy is attached to the role that is attached to the lambda.
+
+
 I very much need to clean this all up and make it pretty and ensure that I don't have some cruft hanging out, but for now it works.  Now off to chase how I can
 file an issue with the Polly IAM docs!
 
